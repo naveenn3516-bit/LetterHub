@@ -182,3 +182,22 @@
     border-right-color: var(--border);
   }
 }
+
+.page { padding: 24px; max-width: 900px; margin: 0 auto; }
+.eyebrow { color: #22d3ee; letter-spacing: 2px; font-size: 14px; }
+.muted { color: #94a3b8; }
+.grid { display: grid; gap: 16px; margin-top: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+.card { display: block; padding: 20px; border: 1px solid #1e293b;
+  border-radius: 14px; background: #0f172a; color: #e2e8f0;
+  text-decoration: none; transition: border-color .2s, transform .2s; }
+.card:hover { border-color: #22d3ee; transform: translateY(-3px); }
+.card .emoji { font-size: 32px; }
+.card h3 { margin: 10px 0 4px; }
+.card p { margin: 0; color: #94a3b8; font-size: 14px; }
+.back { color: #22d3ee; text-decoration: none; }
+.format li { margin: 6px 0; }
+.sample { white-space: pre-wrap; background: #0f172a; border: 1px solid #1e293b;
+  padding: 16px; border-radius: 10px; color: #e2e8f0; font-family: inherit; line-height: 1.6; }
+.btn { margin-top: 12px; padding: 10px 18px; border: 0; border-radius: 8px;
+  background: #22d3ee; color: #020617; font-weight: 600; cursor: pointer; }

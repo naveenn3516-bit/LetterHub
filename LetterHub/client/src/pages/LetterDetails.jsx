@@ -1,142 +1,42 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import { getLetterBySlug } from "../services/api";
-import PlaceholderGuide from "../components/PlaceholderGuide";
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { letters } from "../data/letters";
 
-function LetterDetails() {
+export default function LetterDetail() {
   const { slug } = useParams();
+  const [copied, setCopied] = useState(false);
+  const l = letters.find((x) => x.slug === slug);
 
-  const [letter, setLetter] = useState(null);
-
-  useEffect(() => {
-    const loadLetter = async () => {
-      try {
-        const data = await getLetterBySlug(slug);
-        setLetter(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    loadLetter();
-  }, [slug]);
-
-  const handleCopy = async () => {
-    if (!letter) return;
-
-    try {
-      await navigator.clipboard.writeText(
-        letter.format
-      );
-
-      alert("Letter format copied!");
-    } catch {
-      alert("Unable to copy the format.");
-    }
-  };
-
-  const handlePrint = () => {
-    window.print();
-  };
-
-  if (!letter) {
+  if (!l) {
     return (
-      <div className="loading">
-        Loading letter...
+      <div className="page">
+        <p>Letter not found.</p>
+        <Link to="/categories">← Back to categories</Link>
       </div>
     );
   }
 
+  const copy = async () => {
+    await navigator.clipboard.writeText(l.sample);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <section className="section page-section">
-      <div className="container">
-        <Link
-          to={`/category/${letter.category.slug}`}
-          className="back-link"
-        >
-          ← {letter.category.name}
-        </Link>
+    <div className="page">
+      <Link to="/categories" className="back">← Back</Link>
+      <h1>{l.emoji} {l.title}</h1>
 
-        <div className="letter-header">
-          <span className="letter-large-icon">
-            {letter.icon || "✉"}
-          </span>
+      <h3>Format</h3>
+      <ol className="format">
+        {l.format.map((f) => <li key={f}>{f}</li>)}
+      </ol>
 
-          <div>
-            <span className="eyebrow">
-              {letter.category.name}
-            </span>
-
-            <h1>{letter.title}</h1>
-
-            <p>{letter.description}</p>
-          </div>
-        </div>
-
-        <div className="letter-layout">
-          <div className="main-letter-content">
-            <section className="info-box">
-              <h2>📌 When to use this letter</h2>
-              <p>{letter.whenToUse}</p>
-            </section>
-
-            <PlaceholderGuide
-              placeholders={letter.placeholders}
-            />
-
-            <section className="format-section">
-              <div className="format-heading">
-                <div>
-                  <span className="eyebrow">
-                    Example
-                  </span>
-
-                  <h2>Letter Format</h2>
-                </div>
-
-                <div className="format-actions">
-                  <button onClick={handleCopy}>
-                    📋 Copy
-                  </button>
-
-                  <button onClick={handlePrint}>
-                    🖨️ Print
-                  </button>
-                </div>
-              </div>
-
-              <div className="paper">
-                <pre>{letter.format}</pre>
-              </div>
-            </section>
-          </div>
-
-          <aside className="letter-sidebar">
-            <div className="sidebar-card">
-              <h3>✏️ Remember</h3>
-
-              <p>
-                Don't copy the example person's
-                personal details.
-              </p>
-
-              <p>
-                Replace them with your own details
-                while keeping the same format.
-              </p>
-            </div>
-
-            <div className="sidebar-card">
-              <h3>Language</h3>
-              <span className="language-tag">
-                {letter.language}
-              </span>
-            </div>
-          </aside>
-        </div>
-      </div>
-    </section>
+      <h3>Sample letter</h3>
+      <pre className="sample">{l.sample}</pre>
+      <button className="btn" onClick={copy}>
+        {copied ? "Copied ✓" : "Copy letter"}
+      </button>
+    </div>
   );
 }
-
-export default LetterDetails;
